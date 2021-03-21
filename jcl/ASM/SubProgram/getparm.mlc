@@ -1,0 +1,33 @@
+GETPARM  CSECT                     DEFINE PROGRAM CSECT
+         USING *,12                ESTABLISH PROGRAM ADDRESSABILITY
+         SAVE  (14,12),,*          SAVE REGISTERS
+         LR    12,15               COPY ENTRY POINT ADDRESS TO REG 12
+         LA    15,SAVEAREA         LOAD ADDRESS OF THE NEW SAVE AREA
+         ST    15,8(,13)           ADD THE NEW SAVE AREA TO THE
+         ST    13,4(,15)            SAVE AREA CHAIN
+         LR    13,15               ESTABLISH A NEW SAVE AREA POINTER
+         L     2,0(,1)             LOAD ADDRESS OF PARM DATA
+         LH    3,0(,2)             LOAD LENGTH OF PARM DATA
+         LA    2,2(,2)             COMPUTE ADDRESS OF FIRST BYTE OF    X
+                                    TEXT IN THE PARM DATA
+         LTR   3,3                 TEST LENGTH OF PARM DATA
+         BNZ   MOVEPARM            BR IF NO PARM DATA
+         LA    2,ERRTEXT           LOAD ADDRESS OF ERROR TEXT
+         LA    3,L'ERRTEXT         LOAD LENGTH OF ERROR TEXT
+MOVEPARM LA    14,PARMDATA         LOAD ADDRESS OF MY COPY OF PARM DATA
+         LA    15,L'PARMDATA       LOAD LENGTH OF MY COPY OF PARM DATA
+         ICM   3,B'1000',=C' '     LOAD THE FILL CHARACTER
+         MVCL  14,2                COPY PARM DATA TO MY STORAGE AREA
+         OPEN  (ADCB,OUTPUT)       OPEN THE DCB
+         PUT   ADCB,PARMDATA       WRITE THE PARM DATA
+         CLOSE ADCB                CLOSE THE DCB
+EXIT     L     13,4(,13)           LOAD ADDR OF THE PREVIOUS SAVE AREA
+         RETURN (14,12),T,RC=0     RESTORE REGISTERS AND RETURN
+ADCB     DCB   DSORG=PS,MACRF=PM,RECFM=F,LRECL=100,BLKSIZE=100,        X
+               DDNAME=SYSPRINT
+SAVEAREA DS    18F                 OS/360 SAVE AREA
+         LTORG ,                   DEFINE THE LITERAL POOL
+ERRTEXT  DC    C'THERE IS NO PARM DATA!'
+PARMDATA DS    CL100               MY COPY OF PARM DATA
+         END   GETPARM
+         

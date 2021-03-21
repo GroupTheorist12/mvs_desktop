@@ -1,0 +1,19 @@
+{
+  "name": "mvs-desktop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^12.0.1"
+  },
+  "dependencies": {
+    "ftp": "^0.3.10",
+    "sqlite3": "^5.0.2"
+  }
+}
