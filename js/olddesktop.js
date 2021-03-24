@@ -1,3 +1,4 @@
+
 var CurrentNewsIndex = 1;
 
 var Desktop = {
@@ -77,6 +78,10 @@ var Desktop = {
 
 Desktop.setup();
 
+
+var Desktop = new DesktopM();
+Desktop.setup();
+
 var w_icons = [
     'rocket', 'apps', 'cog', 'anchor'
 ];
@@ -112,7 +117,7 @@ function SubmitJcl() {
     const txtJCL = document.querySelector('#txt-jcl');
 
     var msg = "Job " + txtJCL.value.substring(2, 8) + " was submitted.";
-    showKeepOpenDemo(msg);
+    CreateNotify(msg);
     window.api.send("runJcl", txtJCL.value);
 
     setTimeout(function () {
@@ -120,6 +125,8 @@ function SubmitJcl() {
         //$("#frmCurrentPdf").src = 'http://192.168.1.137:8038/current.pdf';
         var index = $.random(1700, 3270);
         document.getElementById('frmCurrentPdf').src = 'http://192.168.1.137:8038/current.pdf?id=' + index;
+        index = $.random(3270, 6218);
+        document.getElementById('frmConsole').src = 'http://192.168.1.137:8038/cgi-bin/tasks/syslog?id=' + index;
     }, 3000);
 
 }
@@ -177,6 +184,7 @@ function createWindowModal() {
     });
 }
 
+
 function createWindowYoutube() {
     Desktop.createWindow({
         resizeable: true,
@@ -196,6 +204,54 @@ function createWindowYoutube() {
         document.getElementById('frmCurrentPdf').src = 'http://192.168.1.137:8038/current.pdf?id=' + index;
     }, 3000);
 
+}
+
+function createWindowConsole() {
+    Desktop.createWindow({
+        resizeable: true,
+        draggable: true,
+        width: 600,
+        height: 600,
+        icon: "<span class='mif-display'></span>",
+        title: "Hercules Console",
+        content: "<iframe src='txt_stuff.html' width='100%' height='1200px' id='frmConsole'/>",//"https://youtu.be/Qz6XNSB0F3E",
+        clsContent: "bg-white"
+    });
+
+    setTimeout(function () {
+        //w.setContent("New window content");
+        //$("#frmCurrentPdf").src = 'http://192.168.1.137:8038/current.pdf';
+        var index = $.random(1700, 3270);
+        document.getElementById('frmConsole').src = 'http://192.168.1.137:8038/cgi-bin/tasks/syslog?id=' + index;
+    }, 3000);
+
+}
+
+function createWindowSubmitCobol() {
+    var index = $.random(0, 3);
+    var customButtons = [
+        {
+            html: "<span class='mif-upload' title='Submit Jcl'></span>",
+            cls: "secondary",
+            onclick: "SubmitJcl()"
+        },
+        {
+            html: "<span class='mif-file-upload' title='Load Jcl'></span>",
+            cls: "secondary",
+            onclick: "LoadJcl()"
+        }
+    ];
+    Desktop.createWindow({
+        resizeable: true,
+        draggable: true,
+        customButtons: customButtons,
+        width: 360,
+        icon: "<span class='mif-upload'></span>",
+        title: 'Submit Jcl',
+        content: "<div class='p-2'>" +
+            "<textarea id='txt-jcl' cols='80' rows='20' style='font-size:10pt;'></textarea>" +
+            "</div>"
+    });
 }
 
 function openCharm() {
@@ -218,11 +274,9 @@ window.api.receive("fromMain", (data) => {
     txtJCL.value = data;
 });
 
-function SetCharmMessage(message)
-{
-    if(CurrentNewsIndex > 4)
-    {
-        CurrentNewsIndex = 1;    
+function SetCharmMessage(message) {
+    if (CurrentNewsIndex > 4) {
+        CurrentNewsIndex = 1;
     }
     var charmI = document.querySelector('#divNewsContent' + CurrentNewsIndex);
     var divCharm = document.querySelector('#divCharm' + CurrentNewsIndex);
@@ -234,7 +288,7 @@ function SetCharmMessage(message)
     CurrentNewsIndex++;
 
 }
-function showKeepOpenDemo(message) {
+function CreateNotify(message) {
     var notify = Metro.notify;
 
     SetCharmMessage(message);
@@ -242,16 +296,6 @@ function showKeepOpenDemo(message) {
     notify.create(message, "Alert", {
         cls: "default"
     });
-}
-
-function ClearNotifies () {
-    for(var i = 0; i < 4; i++)
-    {
-        var currentCharn = document.querySelector('#divCharm' + (i + 1));
-        currentCharn.style.display = 'none';
-    }
-
-    CurrentNewsIndex = 1;
 }
 
 $("#spnClearNotifies").on("click", function () {

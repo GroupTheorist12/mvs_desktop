@@ -1,5 +1,5 @@
-//HMOV2C       JOB (ASM), 
-//             'MOVE 2C',
+//HMOV2B       JOB (ASM), 
+//             'MOVE 2B',
 //             CLASS=A,
 //             MSGCLASS=A,
 //             REGION=8M,TIME=1440,
@@ -17,17 +17,17 @@
 //SYSIN     DD * 
         PRINT NOGEN              don't show macro expansions
 ****************************************************************
-*        FILENAME:  MOVE2C.MLC                                 *
+*        FILENAME:  MOVE2B.MLC                                 *
 *        AUTHOR  :  Bill Qualls                                *
 *        SYSTEM  :  Compaq 286LTE, PC/370 R4.2                 *
 *        REMARKS :  Demonstrate character moves.               *
 *        REMARKS :  Updated by B Rigg run on MVS38J.           *
 ****************************************************************
 
-MOVE2C  CSECT                    start main code csect at base 0
+MOVE2B  CSECT                    start main code csect at base 0
         SAVE  (14,12)            Save input registers
         LR    R12,R15            base register := entry address
-        USING MOVE2C,R12           declare base register
+        USING MOVE2B,R12           declare base register
         ST    R13,SAVE+4         set back pointer in current save area
         LR    R2,R13             remember callers save area
         LA    R13,SAVE           setup current save area
@@ -37,7 +37,7 @@ MOVE2C  CSECT                    start main code csect at base 0
         WTO   MF=(E,WTOBLOCK)
 
         MVC   OPFX,IPFX
-        MVI   OHYPHEN,C'-'
+        MVC   OHYPHEN,=CL1'-'
         MVC   OLINE,ILINE
         MVC   WTOTEXT(7),SPACE76
 
@@ -76,7 +76,7 @@ OLINE    DS    CL4
 SPACE76   DC    CL76' '
 
         YREGS ,
-        END   MOVE2C               define main entry point
+        END   MOVE2B               define main entry point
 
 /*
 //LKED     EXEC PGM=IEWL,
@@ -87,9 +87,9 @@ SPACE76   DC    CL76' '
 //SYSUT1    DD UNIT=SYSDA,SPACE=(TRK,(5,5))
 //SYSLIN    DD DSN=&&OBJ,DISP=(OLD,DELETE)
 //          DD *
- NAME MOVE2C(R)
+ NAME MOVE2B(R)
 //*-------------------------------------------------------------------
-//MOVE2C    EXEC PGM=MOVE2C
+//MOVE2B    EXEC PGM=MOVE2B
 //STEPLIB   DD DSN=HERC01.ASMMVS.LOADLIB,DISP=SHR
 //SYSPRINT DD SYSOUT=*
 //SYSOUT DD SYSOUT=* 

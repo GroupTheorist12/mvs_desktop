@@ -2,5 +2,19 @@
 // be executed in the renderer process for that window.
 // No Node.js APIs are available in this process because
 // `nodeIntegration` is turned off. Use `preload.js` to
-// selectively enable features needed in the rendering
-// process.
+// selectively enab
+
+function includeJs(jsFilePath) {
+    var js = document.createElement("script");
+
+    js.type = "text/javascript";
+    js.src = jsFilePath;
+
+    document.body.appendChild(js);
+}
+
+includeJs('js/charms.js');
+includeJs('js/mwindow.js');
+includeJs('js/submitjclwindow.js');
+includeJs('js/desktop.js');
+
