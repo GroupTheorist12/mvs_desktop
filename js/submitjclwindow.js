@@ -15,13 +15,14 @@ class SubmitJclWindow extends MWindow
             }
         ];
 
+        this.icon = "<span class='mif-upload'></span>";
         this.content = "<div class='p-2'>" +
         "<textarea id='txt-jcl' cols='80' rows='20' style='font-size:10pt;'></textarea>" +
         "</div>";
 
         this.title =  'Submit Jcl';
-        this.width = 420;
-        this.height = 440;
+        this.width = 540;
+        this.height = 420;
 
     }
 
@@ -38,9 +39,10 @@ class SubmitJclWindow extends MWindow
     
         setTimeout(function () {
             var index = $.random(1700, 3270);
-            document.getElementById('frmCurrentPdf').src = 'http://192.168.1.137:8038/current.pdf?id=' + index;
+            document.getElementById('frmCurrentPdf').src = Desktop.Config.mvshttp + '/current.pdf?id=' + index;
             index = $.random(3271, 6218);
-            document.getElementById('frmConsole').src = 'http://192.168.1.137:8038/cgi-bin/tasks/syslog?id=' + index;
+            document.getElementById('frmConsole').src = Desktop.Config.mvshttp + '/cgi-bin/tasks/syslog?id=' + index;
+            //window.api.send("toMainPDF", "");
         }, 3000);
     
     }

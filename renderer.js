@@ -4,6 +4,8 @@
 // `nodeIntegration` is turned off. Use `preload.js` to
 // selectively enab
 
+var CurrentNewsIndex = 1;
+
 function includeJs(jsFilePath) {
     var js = document.createElement("script");
 
@@ -16,5 +18,7 @@ function includeJs(jsFilePath) {
 includeJs('js/charms.js');
 includeJs('js/mwindow.js');
 includeJs('js/submitjclwindow.js');
+includeJs('js/spoolwindow.js');
+includeJs('js/herculesconsolewindow.js');
 includeJs('js/desktop.js');
 
