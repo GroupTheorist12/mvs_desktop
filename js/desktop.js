@@ -98,46 +98,12 @@ window.api.receive("fromMainConfig", (config) => {
 });
 
 
-function createWindowSubmitCobol() {
-    var index = $.random(0, 3);
-    var customButtons = [
-        {
-            html: "<span class='mif-upload' title='Submit Jcl'></span>",
-            cls: "secondary",
-            onclick: "SubmitJcl()"
-        },
-        {
-            html: "<span class='mif-file-upload' title='Load Jcl'></span>",
-            cls: "secondary",
-            onclick: "LoadJcl()"
-        }
-    ];
-    Desktop.createWindow({
-        resizeable: true,
-        draggable: true,
-        customButtons: customButtons,
-        width: 360,
-        icon: "<span class='mif-upload'></span>",
-        title: 'Submit Jcl',
-        content: "<div class='p-2'>" +
-            "<textarea id='txt-jcl' cols='80' rows='20' style='font-size:10pt;'></textarea>" +
-            "</div>"
-    });
-}
-
 $(".window-area").on("click", function () {
     Metro.charms.close("#charm");
 });
 
 $(".charm-tile").on("click", function () {
     $(this).toggleClass("active");
-});
-
-window.api.receive("fromMain", (data) => {
-    //console.log(`Received ${data} from main process`);
-    const txtJCL = document.querySelector('#txt-jcl');
-
-    txtJCL.value = data;
 });
 
 $("#spnClearNotifies").on("click", function () {

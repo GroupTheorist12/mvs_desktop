@@ -20,5 +20,6 @@ includeJs('js/mwindow.js');
 includeJs('js/submitjclwindow.js');
 includeJs('js/spoolwindow.js');
 includeJs('js/herculesconsolewindow.js');
+includeJs('js/configwindow.js');
 includeJs('js/desktop.js');
 

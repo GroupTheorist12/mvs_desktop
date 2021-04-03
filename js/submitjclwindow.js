@@ -52,3 +52,10 @@ class SubmitJclWindow extends MWindow
 
 var JclWin = new SubmitJclWindow();
 
+window.api.receive("fromMain", (data) => {
+    const txtJCL = document.querySelector('#txt-jcl');
+
+    txtJCL.value = data;
+});
+
+

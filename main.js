@@ -12,7 +12,7 @@ var net = require('net');
 const http = require('http');
 
 let mainWindow;
-
+let configData;
 
 function createWindow() {
   // Create the browser window.
@@ -80,13 +80,9 @@ ipcMain.on("toMain", (event, args) => {
 ipcMain.on("runJcl", (event, args) => {
 
   fs.writeFileSync(path.join(__dirname, "tmp.jcl"), args);
-  /*
-  submitJob('tmp.jcl');
-  */
-
+  
   var client = new net.Socket();
-  client.connect(Desktop.Config.rdrport, Desktop.Config.mvsIP, function () {
-    //console.log('Connected');
+  client.connect(configData.rdrport, configData.mvsIP, function () {
     const content = fs.readFileSync('tmp.jcl').toString();
     client.write(content, 'ascii');
     client.destroy();
@@ -101,7 +97,7 @@ ipcMain.on("toMainPDF", (event, args) => {
 ipcMain.on("toMainConfig", (event, args) => {
 
   let rawdata = fs.readFileSync('config.json');
-  let configData = JSON.parse(rawdata);
+  configData = JSON.parse(rawdata);
 
   mainWindow.webContents.send("fromMainConfig", configData);
 });
@@ -109,7 +105,7 @@ ipcMain.on("toMainConfig", (event, args) => {
 function GetPdfs(args) {
 
 
-  let request = http.get('http://192.168.1.137:8038/pdf/pdfs.txt', (res) => {
+  let request = http.get(configData.mvshttp + '/pdf/pdfs.txt', (res) => {
     if (res.statusCode !== 200) {
       console.error(`Did not get an OK from the server. Code: ${res.statusCode}`);
       res.resume();
@@ -122,15 +118,11 @@ function GetPdfs(args) {
     });
 
     res.on('close', () => {
-      //console.log('Retrieved all data');
-      //console.log(data);
-      //fs.writeFileSync(path.join(__dirname, "pdfs.txt"), data);
 
       var lines = data.split(/\r?\n/);
       var arr = [];
 
       lines.forEach((line) => {
-        //console.log(line);
         arr[arr.length] = line;
       });
 
