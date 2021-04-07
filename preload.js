@@ -9,7 +9,7 @@ contextBridge.exposeInMainWorld(
   "api", {
       send: (channel, data) => {
           // whitelist channels
-          let validChannels = ["toMain", "runJcl", "toMainPDF", "toMainConfig"];
+          let validChannels = ["toMain", "runJcl", "toMainPDF", "toMainConfig", "toMainUpdateConfig"];
           if (validChannels.includes(channel)) {
               ipcRenderer.send(channel, data);
           }

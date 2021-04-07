@@ -94,6 +94,13 @@ ipcMain.on("toMainPDF", (event, args) => {
   GetPdfs(args);
 });
 
+ipcMain.on("toMainUpdateConfig", (event, args) => {
+  configData = args;
+  let data = JSON.stringify(args);
+  fs.writeFileSync('config.json', data);
+  mainWindow.webContents.send("fromMainConfig", configData);
+});
+
 ipcMain.on("toMainConfig", (event, args) => {
 
   let rawdata = fs.readFileSync('config.json');

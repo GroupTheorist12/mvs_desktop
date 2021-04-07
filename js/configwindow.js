@@ -2,8 +2,8 @@ class ConfigWindow extends MWindow {
     constructor() {
         super();
 
-        this.width = 800;
-        this.height = 800;
+        this.width = 600;
+        this.height = 600;
         this.icon = "<span class='mif-cog'></span>";
         this.title = "Configuration Settings";
         this.content = `
@@ -29,7 +29,7 @@ class ConfigWindow extends MWindow {
             </div>
             <div class="row">
                 <div class="cell">
-                    <button type="submit" class="button primary">Submit</button>
+                    <button type="button" class="button primary" id="btnConfigSubmit" onclick="ConfigWindow.UpdateConfig()">Submit</button>
                 </div>
             </div>
         </form>
@@ -50,6 +50,41 @@ class ConfigWindow extends MWindow {
         txtRdrPort.value =  Desktop.Config.rdrport;
     }
 
+    static UpdateConfig()
+    {
+        var txtMVSIP = document.querySelector('#txtMVSIP');
+        Desktop.Config.mvsIP = txtMVSIP.value;
+    
+        var txtMVSHttp = document.querySelector('#txtMVSHttp');
+        Desktop.Config.mvshttp = txtMVSHttp.value;
+        var txtRdrPort = document.querySelector('#txtRdrPort');
+        Desktop.Config.rdrport = txtRdrPort.value;
+    
+        var msg = "Config changes saved.";
+        CreateNotify(msg);
+    
+        window.api.send("toMainUpdateConfig", Desktop.Config);
+    
+    }
+
 }
 
 var ConfigWin = new ConfigWindow();
+
+/*
+$("#btnConfigSubmit").on("click", function () {
+    var txtMVSIP = document.querySelector('#txtMVSIP');
+    Desktop.Config.mvsIP = txtMVSIP.value;
+
+    var txtMVSHttp = document.querySelector('#txtMVSHttp');
+    Desktop.Config.mvshttp = txtMVSHttp.value;
+    var txtRdrPort = document.querySelector('#txtRdrPort');
+    Desktop.Config.rdrport = txtRdrPort.value;
+
+    var msg = "Config changes saved.";
+    CreateNotify(msg);
+
+    window.api.send("toMainUpdateConfig", Desktop.Config);
+
+});
+*/
