@@ -13,6 +13,7 @@ const http = require('http');
 
 let mainWindow;
 let configData;
+let pdsData;
 
 function createWindow() {
   // Create the browser window.
@@ -80,7 +81,7 @@ ipcMain.on("toMain", (event, args) => {
 ipcMain.on("runJcl", (event, args) => {
 
   fs.writeFileSync(path.join(__dirname, "tmp.jcl"), args);
-  
+
   var client = new net.Socket();
   client.connect(configData.rdrport, configData.mvsIP, function () {
     const content = fs.readFileSync('tmp.jcl').toString();
@@ -92,6 +93,12 @@ ipcMain.on("runJcl", (event, args) => {
 
 ipcMain.on("toMainPDF", (event, args) => {
   GetPdfs(args);
+});
+
+ipcMain.on("toMainCatalogs", (event, args) => {
+
+  GetCatalogList();
+  mainWindow.webContents.send("fromMainCatalogs", pdsData);
 });
 
 ipcMain.on("toMainUpdateConfig", (event, args) => {
@@ -108,6 +115,52 @@ ipcMain.on("toMainConfig", (event, args) => {
 
   mainWindow.webContents.send("fromMainConfig", configData);
 });
+
+function GetCatalogList() {
+  let request = http.get(configData.mvshttp + '/catlist.txt', (res) => {
+    if (res.statusCode !== 200) {
+      console.error(`Did not get an OK from the server. Code: ${res.statusCode}`);
+      res.resume();
+      return;
+    }
+
+    let data = '';
+    res.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    res.on('close', () => {
+
+      const lines = data.split(/\r?\n/);
+
+      var arr = [];
+
+      // print all lines
+      lines.forEach((line) => {
+
+        if (line.indexOf("NONVSAM ------- ") != -1) {
+          if (line.indexOf("IDCAMS") != -1) {
+            var str  = line.replace("NONVSAM ------- ", "");
+                        
+            var ind = str.indexOf("\r");
+
+            arr[arr.length] = str.substring(0, ind);
+          }
+          else {
+            arr[arr.length] = line.replace("NONVSAM ------- ", "").trim();
+          }
+        }
+      });
+
+      pdsData = arr;
+      mainWindow.webContents.send("fromMainCatalogs", arr);
+
+
+    });
+
+
+  });
+}
 
 function GetPdfs(args) {
 

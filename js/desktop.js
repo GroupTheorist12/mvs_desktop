@@ -9,6 +9,7 @@ class DesktopM {
         };
 
         this.memberConfig = null;
+        this.memberPds = null;
         this.wins =  {};
 
     }
@@ -21,9 +22,19 @@ class DesktopM {
         this.memberConfig = v;
     }
 
+    get Pds()    {
+        return this.memberPds;
+    }
+
+    set Pds(v) {
+        this.memberPds = v;
+    }
+
     setup(options) {
         this.options = $.extend({}, this.options, options);
         window.api.send("toMainConfig", "");
+        window.api.send("toMainCatalogs", "");
+
         return this;
     }
 
@@ -97,6 +108,10 @@ window.api.receive("fromMainConfig", (config) => {
     Desktop.Config = config;
 });
 
+
+window.api.receive("fromMainCatalogs", (pds) => {
+    Desktop.Pds = pds;
+});
 
 $(".window-area").on("click", function () {
     Metro.charms.close("#charm");
